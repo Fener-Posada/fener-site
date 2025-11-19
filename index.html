@@ -1332,84 +1332,106 @@
           </button>
         </form>
                   <p class="mt-1 text-[10px] text-slate-500">
-            Sample AI agent – responses are tailored to Fener’s profile.
+            Sample AI agent –------- responses are tailored to Fener’s profile.
           </p>
       </div>
     </div>
   </section>
 
-  <script>
-    const chatWindow = document.getElementById("chat-window");
-    const chatForm = document.getElementById("chat-form");
-    const chatInput = document.getElementById("chat-input");
+ <script>
+  const chatWindow = document.getElementById("chat-window");
+  const chatForm = document.getElementById("chat-form");
+  const chatInput = document.getElementById("chat-input");
 
-    function addMessage(text, from = "user") {
-      const wrapper = document.createElement("div");
-      wrapper.className = "flex items-start gap-2 " + (from === "user" ? "justify-end" : "");
+  // Opcional: historial local para enviar contexto al backend
+  const chatHistory = [];
 
-      const bubble = document.createElement("div");
-      bubble.className =
-        (from === "user"
-          ? "bg-emerald-500/20 text-emerald-100 rounded-2xl rounded-tr-sm"
-          : "bg-slate-800/90 text-slate-100 rounded-2xl rounded-tl-sm") +
-        " px-3 py-2 max-w-[80%] text-[13px]";
+  function addMessage(text, from = "user") {
+    const wrapper = document.createElement("div");
+    wrapper.className =
+      "flex items-start gap-2 " + (from === "user" ? "justify-end" : "");
 
-      bubble.textContent = text;
+    const bubble = document.createElement("div");
+    bubble.className =
+      (from === "user"
+        ? "bg-emerald-500/20 text-emerald-100 rounded-2xl rounded-tr-sm"
+        : "bg-slate-800/90 text-slate-100 rounded-2xl rounded-tl-sm") +
+      " px-3 py-2 max-w-[80%] text-[13px]";
 
-      if (from === "user") {
-        wrapper.appendChild(bubble);
-      } else {
-        const avatar = document.createElement("div");
-        avatar.className =
-          "h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs";
-        avatar.textContent = "🤖";
-        wrapper.appendChild(avatar);
-        wrapper.appendChild(bubble);
-      }
+    bubble.textContent = text;
 
-      chatWindow.appendChild(wrapper);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+    if (from === "user") {
+      wrapper.appendChild(bubble);
+    } else {
+      const avatar = document.createElement("div");
+      avatar.className =
+        "h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs";
+      avatar.textContent = "🤖";
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(bubble);
     }
 
-    function botReply(question) {
-      const q = question.toLowerCase();
+    chatWindow.appendChild(wrapper);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
 
-      if (q.includes("tool") || q.includes("stack") || q.includes("tech")) {
-        return "He works mainly with Power BI, Fabric, SQL, Python, n8n and AI agents connected to data sources.";
+  async function callAgent(message) {
+    try {
+      const response = await fetch("/api/agent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message,
+          history: chatHistory.slice(-6) // opcional: últimos mensajes
+        })
+      });
+
+      if (!response.ok) {
+        console.error("Agent HTTP error:", response.status);
+        addMessage(
+          "There was an issue contacting the agent. Please try again in a moment.",
+          "bot"
+        );
+        return;
       }
 
-      if (q.includes("experience") || q.includes("years") || q.includes("exp")) {
-        return "Fener has 4+ years in analytics & BI, with 100+ data projects across sales, finance, marketing, logistics and accounting.";
-      }
+      const data = await response.json();
+      const reply =
+        data?.reply ||
+        "Sorry, I couldn't generate a reply right now, please try again.";
 
-      if (q.includes("dashboard")) {
-        return "He has built 50+ automated dashboards in production for marketing, sales, finance, logistics and operations.";
-      }
+      addMessage(reply, "bot");
 
-      if (q.includes("agent") || q.includes("bot") || q.includes("automation")) {
-        return "He designs AI workflows with n8n + LLMs to automate reporting, tagging, alerts and data syncs across systems.";
-      }
-
-      if (q.includes("meeting") || q.includes("call") || q.includes("reunion")) {
-        return "You can book a 20-minute intro call here: https://calendly.com/tu-usuario/intro-call";
-      }
-
-      return "Great question. He focuses on turning messy data into clear dashboards and AI workflows that remove manual reporting. If you’d like specifics, try asking about tools, experience or dashboards — or type 'meeting' to book a call.";
+      // Guardamos en historial (por si luego quieres usarlo en el backend)
+      chatHistory.push({ role: "user", content: message });
+      chatHistory.push({ role: "assistant", content: reply });
+    } catch (err) {
+      console.error("Agent fetch error:", err);
+      addMessage(
+        "Network error talking to the agent. Check your connection and try again.",
+        "bot"
+      );
     }
+  }
 
-    chatForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const text = chatInput.value.trim();
-      if (!text) return;
-      addMessage(text, "user");
-      chatInput.value = "";
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = chatInput.value.trim();
+    if (!text) return;
 
-      setTimeout(() => {
-        const reply = botReply(text);
-        addMessage(reply, "bot");
-      }, 500);
-    });
-  </script>
+    // Pintar mensaje del usuario
+    addMessage(text, "user");
+    chatInput.value = "";
+
+    // Llamar al backend con IA real
+    callAgent(text);
+  });
+</script>
+</body>
+</html>
+
 
 </body>
 </html>
