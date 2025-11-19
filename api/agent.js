@@ -18,6 +18,24 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing 'message' in body" });
   }
 
+  // --------- LIMITE POR LONGITUD (para cuidar créditos) ----------
+  const trimmed = message.trim();
+  const charCount = trimmed.length;
+  const wordCount = trimmed.split(/\s+/).length;
+
+  const MAX_CHARS = 350;  // puedes ajustar estos valores
+  const MAX_WORDS = 80;
+
+  if (charCount > MAX_CHARS || wordCount > MAX_WORDS) {
+    const softReply =
+      "Veo que tu consulta es bastante completa y detallada 😊. " +
+      "Prefiero revisarla contigo en una llamada para darte una respuesta seria. " +
+      "Escríbeme por LinkedIn o correo y agendamos algo.";
+
+    return res.status(200).json({ reply: softReply });
+  }
+  // ---------------------------------------------------------------
+
   try {
     // Construimos el contexto: sistema + un poco de historial + mensaje actual
     const messages = [
