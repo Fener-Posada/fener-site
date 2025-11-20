@@ -1,4 +1,8 @@
 // api/agent.js
+
+
+
+
 export default async function handler(req, res) {
   // Solo aceptamos POST
   if (req.method !== "POST") {
@@ -37,7 +41,17 @@ export default async function handler(req, res) {
   // ---------------------------------------------------------------
 
   try {
-    // Construimos el contexto: sistema + un poco de historial + mensaje actual
+    // Normalizamos el historial por si viene mal
+    const safeHistory = Array.isArray(history)
+      ? history.filter(
+          (m) =>
+            m &&
+            (m.role === "user" || m.role === "assistant") &&
+            typeof m.content === "string"
+        )
+      : [];
+
+    // Construimos el contexto: sistema + últimos turnos + mensaje actual
     const messages = [
       {
         role: "system",
@@ -152,16 +166,16 @@ I design and build end-to-end data solutions: from extracting and cleaning data,
 - If you’re unsure whether I’ve done something, say I haven’t done it directly but can probably learn or adapt from similar work.
 - Never share private contact info other than what is visible on the site (email, LinkedIn, contact form).
 
-
         `.trim()
       },
-      // En el futuro podemos pegar aquí parte del historial:
-      // ...history.slice(-6),
+      // 🧠 usamos solo los últimos 10 mensajes de historial
+      ...safeHistory.slice(-10),
       {
         role: "user",
         content: message
       }
     ];
+
 
     // Llamada a la API de OpenAI usando fetch
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
