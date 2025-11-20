@@ -4,28 +4,34 @@
   <meta charset="UTF-8" />
   <title>Fener Posada | Analytics & AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Tailwind vía CDN para prototipo rápido -->
+
+  <!-- Tailwind vía CDN (prototipo rápido) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
+    /* =============================
+       BASE
+    ============================== */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
     }
 
-    /* Capa inicial de caos de texto */
+    .intro-gradient {
+      background:
+        radial-gradient(circle at top, rgba(59, 130, 246, 0.35), transparent 60%),
+        radial-gradient(circle at bottom, rgba(16, 185, 129, 0.35), transparent 60%);
+    }
+
+    /* =============================
+       CAPA INICIAL: “CAOS” DE DATOS
+    ============================== */
     #intro-numbers {
       position: absolute;
       inset: 0;
       z-index: 20;
       overflow: hidden;
       background: #020617; /* slate-950 */
-    }
-
-    .intro-gradient {
-      background:
-        radial-gradient(circle at top, rgba(59,130,246,0.35), transparent 60%),
-        radial-gradient(circle at bottom, rgba(16,185,129,0.35), transparent 60%);
     }
 
     .chaos-fragment {
@@ -75,7 +81,9 @@
       animation-play-state: paused;
     }
 
-    /* Tarjetas (insights) */
+    /* =============================
+       TARJETAS / INSIGHTS HERO
+    ============================== */
     .insight-card {
       transition:
         opacity 0.7s ease,
@@ -83,70 +91,13 @@
         box-shadow 0.6s ease;
     }
 
-    /* ---- Slider para proyectos (imágenes múltiples) ---- */
-    .project-slider {
-    position: relative;
-    overflow: hidden;
-    }
-
-    .project-slide {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top;      /* <<< ancla la imagen arriba del dashboard */
-      opacity: 0;
-      transform: scale(1.02);    /* puedes dejar 1.0 si no quieres zoom */
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .project-slide.active {
-    opacity: 1;
-    transform: scale(1);
-    }
-
-    .project-slider-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(
-        to top,
-        rgba(15, 23, 42, 0.9),
-        rgba(15, 23, 42, 0.0) 45%
-    );
-    }
-
-    /* Puntos del carrusel */
-    .project-slider-dots {
-    position: absolute;
-    bottom: 0.6rem;
-    right: 0.75rem;
-    display: flex;
-    gap: 0.3rem;
-    z-index: 10;
-    }
-
-    .project-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 9999px;
-    background-color: rgba(148, 163, 184, 0.6); /* slate-400 */
-    transition: width 0.25s ease, background-color 0.25s ease;
-    }
-
-    .project-dot.active {
-    width: 16px;
-    background-color: rgb(52, 211, 153); /* emerald-400 */
-    }
-
-
     .insight-card.glow {
+      /* Actualmente no se usa, pero queda listo por si quieres un hover más fuerte */
       box-shadow: 0 0 28px rgba(52, 211, 153, 0.5);
       transform: translateY(-3px);
     }
 
-    /* Pasos de aparición secuencial */
+    /* Aparición secuencial de elementos del hero */
     .sequence-step {
       opacity: 0;
       transform: translateY(14px);
@@ -158,7 +109,69 @@
       transform: translateY(0);
     }
 
-    /* ---------- Animación workflow (U → Bot → Systems → KPI) ---------- */
+    /* =============================
+       PORTFOLIO: SLIDER (multi-imagen)
+       Nota: ahora mismo no hay .project-slide ni .project-dot en el HTML,
+       así que la parte de “carrusel” está preparada pero no se usa aún.
+    ============================== */
+    .project-slider {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .project-slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .project-slider-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        rgba(15, 23, 42, 0.9),
+        rgba(15, 23, 42, 0.0) 45%
+      );
+    }
+
+    .project-slider-dots {
+      position: absolute;
+      bottom: 0.6rem;
+      right: 0.75rem;
+      display: flex;
+      gap: 0.3rem;
+      z-index: 10;
+    }
+
+    .project-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background-color: rgba(148, 163, 184, 0.6); /* slate-400 */
+      transition: width 0.25s ease, background-color 0.25s ease;
+    }
+
+    .project-dot.active {
+      width: 16px;
+      background-color: rgb(52, 211, 153); /* emerald-400 */
+    }
+
+    /* =============================
+       HERO: ANIMACIÓN WORKFLOW (User → Bot → Systems → KPI)
+    ============================== */
     .workflow-node {
       animation: nodePulse 4s ease-in-out infinite;
     }
@@ -174,12 +187,8 @@
     }
 
     @keyframes nodePulse {
-      0%, 55%, 100% {
-        transform: translateY(0);
-      }
-      20% {
-        transform: translateY(-2px);
-      }
+      0%, 55%, 100% { transform: translateY(0); }
+      20% { transform: translateY(-2px); }
     }
 
     .workflow-node.node-1 .workflow-circle,
@@ -195,12 +204,8 @@
     .workflow-node.node-4 .workflow-circle { animation-delay: 1.8s; }
 
     @keyframes circleGlow {
-      0%, 55%, 100% {
-        box-shadow: 0 0 0 rgba(52, 211, 153, 0);
-      }
-      20% {
-        box-shadow: 0 0 18px rgba(52, 211, 153, 0.9);
-      }
+      0%, 55%, 100% { box-shadow: 0 0 0 rgba(52, 211, 153, 0); }
+      20%        { box-shadow: 0 0 18px rgba(52, 211, 153, 0.9); }
     }
 
     .workflow-connector {
@@ -228,19 +233,15 @@
     .workflow-connector.conn-3::before { animation-delay: 1.5s; }
 
     @keyframes flow {
-      0% {
-        transform: translateX(-120%);
-      }
-      30% {
-        transform: translateX(0%);
-      }
+      0%   { transform: translateX(-120%); }
+      30%  { transform: translateX(0%); }
       60%,
-      100% {
-        transform: translateX(120%);
-      }
+      100% { transform: translateX(120%); }
     }
 
-    /* ---------- Animación barras (card de Automated dashboards) ---------- */
+    /* =============================
+       HERO: ANIMACIÓN BARRAS
+    ============================== */
     .chart-bar {
       transform-origin: bottom center;
       animation: barPulse 6s ease-in-out infinite;
@@ -252,15 +253,13 @@
     .chart-bar:nth-child(4) { animation-delay: 1.2s; }
 
     @keyframes barPulse {
-      0%, 100% {
-        transform: scaleY(0.9);
-      }
-      50% {
-        transform: scaleY(1.1);
-      }
+      0%, 100% { transform: scaleY(0.9); }
+      50%      { transform: scaleY(1.1); }
     }
 
-    /* --------- Animación línea (card Data quality) --------- */
+    /* =============================
+       HERO: ANIMACIÓN LÍNEA (Data quality)
+    ============================== */
     .data-line {
       stroke-dasharray: 200;
       stroke-dashoffset: 200;
@@ -285,10 +284,32 @@
         opacity: 0.2;
       }
     }
+
+    /* =============================
+       UTILIDADES
+    ============================== */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.25s ease-out;
+    }
   </style>
 </head>
+
 <body class="bg-slate-950 text-slate-50 antialiased">
 
+  <!-- ====================================================
+       HERO: CAOS → ORDEN + INSIGHTS
+  ===================================================== -->
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Capa de caos -->
     <div id="intro-numbers" class="intro-gradient">
@@ -302,13 +323,13 @@
     <!-- Fondo del hero cuando ya aparece -->
     <div class="pointer-events-none absolute inset-0 intro-gradient opacity-70"></div>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal hero -->
     <div
       id="hero-content"
       class="relative z-10 max-w-6xl mx-auto px-6 md:px-10 opacity-0 transition-opacity duration-500"
     >
       <div class="grid gap-10 md:grid-cols-[1.2fr,1fr] items-center">
-        <!-- Columna izquierda -->
+        <!-- ===================== Hero: Columna izquierda ===================== -->
         <div id="hero-left">
           <!-- 1. Top bar: foto + nombre + rol -->
           <div id="hero-topbar" class="sequence-step flex items-center gap-4 mb-4">
@@ -322,30 +343,31 @@
                 Fener Posada
               </p>
               <p class="text-xs md:text-sm text-slate-400">
-                Analytics Engineer · BI &amp; Data Modeling · AI &amp; Automation 
+                Analytics Engineer · BI &amp; Data Modeling · AI &amp; Automation
               </p>
             </div>
           </div>
 
-          <!-- 2. Tagline + headline + párrafo -->
+          <!-- 2. Headline + párrafo -->
           <div id="hero-maintext" class="sequence-step mb-6">
-            <!--  <p class="text-emerald-300 text-[10px] md:text-xs tracking-[0.25em] uppercase mb-2">
+            <!-- Tagline comentado por si lo quieres reactivar luego
+            <p class="text-emerald-300 text-[10px] md:text-xs tracking-[0.25em] uppercase mb-2">
               Analytics Engineer · Power BI · AI &amp; Automation
             </p> -->
             <h1 class="text-[2rem] sm:text-4xl md:text-5xl font-semibold tracking-tight mb-3">
               I turn chaotic data into
               <span class="text-emerald-300">automated dashboards</span>
-              and <span class="text-emerald-300">AI workflows & agents</span>
+              and <span class="text-emerald-300">AI workflows &amp; agents</span>
               that your teams actually use.
             </h1>
             <p class="text-slate-300 text-[13px] sm:text-sm md:text-base max-w-xl">
               From messy Excel files, ERPs and CRMs to clean, decision-ready analytics —
-              with Power BI, Fabric, n8n and AI agents quietly running in the background
+              with Python, Power BI, Fabric, n8n and AI agents quietly running in the background
               while your team focuses on execution instead of manual reporting.
             </p>
           </div>
 
-          <!-- 7. Botones -->
+          <!-- 3. Botones principales -->
           <div id="hero-cta-buttons" class="sequence-step flex flex-wrap gap-4 mb-4">
             <a
               href="#portfolio"
@@ -353,16 +375,24 @@
             >
               View portfolio
             </a>
+            
             <a
               href="#contact"
               class="px-6 py-3 rounded-full border border-emerald-300/60 text-emerald-200 font-medium text-sm md:text-base hover:bg-emerald-300/10 transition"
             >
-              🤖 Talk to my AI agent.
+              "Let's connect".
             </a>
+            <!-- ====================================================
+            ===================================================== -->
+
+
           </div>
 
-          <!-- 8. Chips skills -->
-          <div id="hero-chips" class="sequence-step flex flex-wrap gap-3 text-[11px] md:text-xs text-slate-400">
+          <!-- 4. Chips de skills -->
+          <div
+            id="hero-chips"
+            class="sequence-step flex flex-wrap gap-3 text-[11px] md:text-xs text-slate-400"
+          >
             <span class="px-3 py-1 rounded-full bg-slate-900/60 border border-slate-700/80">
               Power BI &amp; Fabric
             </span>
@@ -378,9 +408,9 @@
           </div>
         </div>
 
-        <!-- Columna derecha: 2×2 cards (3,4,5,6) -->
+        <!-- ===================== Hero: Columna derecha (tarjetas) ===================== -->
         <div id="hero-right" class="grid gap-4 lg:grid-cols-2">
-          <!-- 3. Experience & credentials -->
+          <!-- Card 1: Experience & credentials -->
           <div
             id="card-kpi"
             class="sequence-step insight-card bg-slate-900/80 border border-slate-700/80 rounded-2xl p-4 shadow-lg shadow-black/40"
@@ -402,7 +432,6 @@
               <p class="text-[11px] text-slate-400">
                 100+ cross-functional data projects shipped across sales, finance,
                 marketing, logistics and accounting.
-
               </p>
 
               <div class="h-px bg-slate-800/80 my-1"></div>
@@ -413,27 +442,56 @@
 
               <div class="space-y-2">
                 <div class="flex items-center gap-2">
-                  <div class="h-7 w-7 rounded-full bg-emerald-500/15 border border-emerald-400/70 flex items-center justify-center text-[11px] font-semibold text-emerald-200">
-                    MS
-                  </div>
-                  <p class="text-[11px] text-slate-400">
-                    Microsoft Certified: Fabric Data Engineer Associate
-                  </p>
+                  <a
+                    href="https://learn.microsoft.com/en-us/users/FenerPosada-7364/credentials/E0EFA3C1F85D0BD8"
+                    target="_blank"
+                    rel="noreferrer"
+                    class="flex items-center gap-2 group cursor-pointer"
+                    aria-label="View Microsoft Fabric Data Engineer Associate credential"
+                  >
+                    <div
+                      class="h-7 w-7 rounded-full bg-emerald-500/15 border border-emerald-400/70
+                            flex items-center justify-center text-[11px] font-semibold text-emerald-200
+                            group-hover:border-emerald-200 group-hover:bg-emerald-500/25 transition"
+                    >
+                      MS
+                    </div>
+                    <p
+                      class="text-[11px] text-slate-400 group-hover:text-emerald-200
+                            underline underline-offset-2 decoration-emerald-400/60"
+                    >
+                      Microsoft Certified: Fabric Data Engineer Associate
+                    </p>
+                  </a>
                 </div>
-
                 <div class="flex items-center gap-2">
-                  <div class="h-7 w-7 rounded-full bg-emerald-500/15 border border-emerald-400/70 flex items-center justify-center text-[11px] font-semibold text-emerald-200">
-                    MS
-                  </div>
-                  <p class="text-[11px] text-slate-400">
-                    Microsoft Certified: Power BI Data Analyst Associate
-                  </p>
+                  <a
+                    href="https://learn.microsoft.com/es-mx/users/fenerposada-7364/credentials/705ec7c8da1112e8"
+                    target="_blank"
+                    rel="noreferrer"
+                    class="flex items-center gap-2 group cursor-pointer"
+                    aria-label="View Microsoft Fabric Data Engineer Associate credential"
+                  >
+                    <div
+                      class="h-7 w-7 rounded-full bg-emerald-500/15 border border-emerald-400/70
+                            flex items-center justify-center text-[11px] font-semibold text-emerald-200
+                            group-hover:border-emerald-200 group-hover:bg-emerald-500/25 transition"
+                    >
+                      MS
+                    </div>
+                    <p
+                      class="text-[11px] text-slate-400 group-hover:text-emerald-200
+                            underline underline-offset-2 decoration-emerald-400/60"
+                    >
+                      Microsoft Certified: Power BI Data Analyst Associate
+                    </p>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 4. Automated dashboards -->
+          <!-- Card 2: Automated dashboards -->
           <div
             id="card-bars"
             class="sequence-step insight-card bg-slate-900/80 border border-slate-700/80 rounded-2xl p-4 shadow-lg shadow-black/40"
@@ -447,26 +505,28 @@
               <div class="chart-bar flex-1 bg-emerald-400/70 rounded-t-md h-16"></div>
               <div class="chart-bar flex-1 bg-emerald-400 rounded-t-md h-20"></div>
             </div>
-            <br>
+            <br />
             <p class="text-[11px] text-slate-400">
-              50+ automated dashboards in production across marketing, sales, finance, logistics and operations —
-              covering pipeline, campaigns, inventory, accounting, plant performance and more.
+              50+ automated dashboards in production across marketing, sales, finance, logistics
+              and operations — covering pipeline, campaigns, inventory, accounting, plant
+              performance and more.
             </p>
-
           </div>
 
-          <!-- 5. AI agent workflows -->
+          <!-- Card 3: AI agent workflows -->
           <div
             id="card-agent"
-            class="sequence-step insight-card bg-slate-900/80 border border-emerald-500/60 rounded-2xl p-4 shadow-lg shadow-black/40"
+            class="sequence-step insight-card bg-slate-900/80 border border-slate-700/80 rounded-2xl p-4 shadow-lg shadow-black/40"
           >
             <p class="text-[10px] uppercase tracking-[0.2em] text-slate-400 mb-3">
               AI agent workflows
             </p>
-            <br>
+            <br />
             <div class="flex items-center justify-between gap-2 text-[10px] text-emerald-100">
               <div class="workflow-node node-1 flex flex-col items-center">
-                <div class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/20 border border-emerald-400/70 flex items-center justify-center">
+                <div
+                  class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/20 border border-emerald-400/70 flex items-center justify-center"
+                >
                   U
                 </div>
                 <span class="mt-1 opacity-80">User</span>
@@ -475,7 +535,9 @@
               <div class="workflow-connector conn-1 flex-1 h-[2px] bg-emerald-500/40 rounded-full"></div>
 
               <div class="workflow-node node-2 flex flex-col items-center">
-                <div class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/30 border border-emerald-400 flex items-center justify-center">
+                <div
+                  class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/30 border border-emerald-400 flex items-center justify-center"
+                >
                   🤖
                 </div>
                 <span class="mt-1 opacity-80">Bot</span>
@@ -484,7 +546,9 @@
               <div class="workflow-connector conn-2 flex-1 h-[2px] bg-emerald-500/40 rounded-full"></div>
 
               <div class="workflow-node node-3 flex flex-col items-center">
-                <div class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/20 border border-emerald-400/70 flex items-center justify-center">
+                <div
+                  class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/20 border border-emerald-400/70 flex items-center justify-center"
+                >
                   ⚙
                 </div>
                 <span class="mt-1 opacity-80">Systems</span>
@@ -493,23 +557,23 @@
               <div class="workflow-connector conn-3 flex-1 h-[2px] bg-emerald-500/40 rounded-full"></div>
 
               <div class="workflow-node node-4 flex flex-col items-center">
-                <div class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/30 border border-emerald-400 flex items-center justify-center text-[9px]">
+                <div
+                  class="workflow-circle h-8 w-8 rounded-full bg-emerald-400/30 border border-emerald-400 flex items-center justify-center text-[9px]"
+                >
                   KPI
                 </div>
                 <span class="mt-1 opacity-80">Insights</span>
               </div>
             </div>
-            <br>
+            <br />
             <p class="text-[11px] text-slate-400">
               Routine tasks automated by bots connected to your data stack:
               scheduled reporting, alerts, tagging and data syncs.
-
               40%+ of repetitive reporting steps handled automatically.
             </p>
-
           </div>
 
-          <!-- 6. Data quality -->
+          <!-- Card 4: Data quality -->
           <div
             id="card-line"
             class="sequence-step insight-card bg-slate-900/80 border border-slate-700/80 rounded-2xl p-4 shadow-lg shadow-black/40"
@@ -542,16 +606,20 @@
     </div>
   </section>
 
+  <!-- ====================================================
+       SCRIPT: CAOS → ORDEN + HERO + GIFs + (slider preparado)
+  ===================================================== -->
   <script>
     const chaosFragments = [];
-    let chaosAvatar = null; // referencia a la foto del caos
+    let chaosAvatar = null; // referencia a la foto flotando en el caos
 
+    /* ---- Genera el “caos” inicial de textos / métricas / iconos ---- */
     function generateChaos() {
       const intro = document.getElementById("intro-numbers");
       const width = window.innerWidth;
       const height = window.innerHeight;
 
-      /* palabras + conceptos */
+      // palabras / conceptos clave
       const words = [
         "Fener", "Posada",
         "Analytics", "Engineer",
@@ -596,11 +664,11 @@
 
       const totalWordFragments = 150;
 
+      // Mezcla de palabras, campos, filas y KPIs
       for (let i = 0; i < totalWordFragments; i++) {
         const span = document.createElement("span");
         span.classList.add("chaos-fragment");
 
-        // mix palabras, fieldnames, filas y kpis para que parezca datos crudos
         const poolChoice = Math.random();
         let text = "";
 
@@ -628,7 +696,7 @@
         chaosFragments.push(span);
       }
 
-      /* métricas / valores numéricos */
+      // Métricas numéricas
       const metrics = [
         "+72%", "+40%", "100+ proj",
         "12+ db", "5 teams", "4+ yrs",
@@ -659,7 +727,7 @@
         chaosFragments.push(span);
       }
 
-      /* mini-gráficos hechos con caracteres */
+      // Mini-gráficos de texto
       const miniCharts = ["▁▃▆█"];
       const totalChartFragments = 2;
 
@@ -682,7 +750,7 @@
         chaosFragments.push(span);
       }
 
-      /* iconos */
+      // Iconos
       const icons = ["🤖", "⚙"];
       const totalIcons = 10;
 
@@ -705,7 +773,7 @@
         chaosFragments.push(span);
       }
 
-      // Una sola foto flotando (avatar del caos)
+      // Foto flotante (avatar en el caos)
       const img = document.createElement("img");
       img.src = "avatar-fener.png";
       img.classList.add("chaos-fragment", "chaos-photo");
@@ -720,9 +788,10 @@
 
       intro.appendChild(img);
       chaosFragments.push(img);
-      chaosAvatar = img; // guardamos referencia
+      chaosAvatar = img;
     }
 
+    /* ---- Condensa el caos hacia el hero (izq / der) ---- */
     function condenseChaos(onFinished) {
       const intro = document.getElementById("intro-numbers");
       intro.classList.add("condensing");
@@ -741,12 +810,18 @@
         let targetX, targetY;
 
         if (frag === chaosAvatar) {
-          // FOTO DEL CAOS: va directamente hacia el avatar final
-          targetX = avatarRect.left + avatarRect.width / 2 - chaosAvatar.offsetWidth / 2;
-          targetY = avatarRect.top + avatarRect.height / 2 - chaosAvatar.offsetHeight / 2;
+          // La foto viaja hacia la foto final del hero
+          targetX =
+            avatarRect.left +
+            avatarRect.width / 2 -
+            chaosAvatar.offsetWidth / 2;
+          targetY =
+            avatarRect.top +
+            avatarRect.height / 2 -
+            chaosAvatar.offsetHeight / 2;
           frag.style.transform = "scale(0.4)";
         } else {
-          // resto de fragmentos: se reparten entre izquierda y derecha
+          // El resto de fragmentos se “organizan” hacia izquierda / derecha
           const goLeft = index % 3 !== 0; // ~2/3 hacia la izquierda
           const rect = goLeft ? leftRect : rightRect;
 
@@ -768,16 +843,17 @@
       }, 1500);
     }
 
+    /* ---- Hace aparecer el hero por pasos ---- */
     function revealSequence() {
       const steps = [
-        document.getElementById("hero-topbar"),     // 1
-        document.getElementById("hero-maintext"),   // 2
-        document.getElementById("card-kpi"),        // 3
-        document.getElementById("card-bars"),       // 4
-        document.getElementById("card-agent"),      // 5
-        document.getElementById("card-line"),       // 6
-        document.getElementById("hero-cta-buttons"),// 7
-        document.getElementById("hero-chips")       // 8
+        document.getElementById("hero-topbar"),      // 1
+        document.getElementById("hero-maintext"),    // 2
+        document.getElementById("card-kpi"),         // 3
+        document.getElementById("card-bars"),        // 4
+        document.getElementById("card-agent"),       // 5
+        document.getElementById("card-line"),        // 6
+        document.getElementById("hero-cta-buttons"), // 7
+        document.getElementById("hero-chips")        // 8
       ].filter(Boolean);
 
       steps.forEach((el, i) => {
@@ -787,6 +863,7 @@
       });
     }
 
+    /* ---- GIFs en cards de portfolio (se activan al hover de la card completa) ---- */
     function initHoverGifs() {
       const cards = document.querySelectorAll("article[data-hover-gif]");
 
@@ -798,69 +875,69 @@
         const animatedSrc = img.dataset.animated;
 
         card.addEventListener("mouseenter", () => {
-          img.src = animatedSrc; // empieza GIF al entrar en cualquier parte de la card
+          img.src = animatedSrc;
         });
 
         card.addEventListener("mouseleave", () => {
-          img.src = staticSrc; // vuelve a imagen quieta al salir de la card
+          img.src = staticSrc;
         });
       });
     }
 
-
+    /* ---- Lógica de slider multi-imagen (preparado, ahora mismo sin .project-slide) ---- */
     function initProjectSliders() {
-    const sliders = document.querySelectorAll(".project-slider");
+      const sliders = document.querySelectorAll(".project-slider");
 
-    sliders.forEach((slider) => {
+      sliders.forEach((slider) => {
         const slides = slider.querySelectorAll(".project-slide");
         const dots = slider.querySelectorAll(".project-dot");
 
+        // Si no hay .project-slide definidos, no hace nada (estado actual)
         if (slides.length === 0) return;
 
         let current = 0;
 
         function goTo(index) {
-        slides[current].classList.remove("active");
-        dots[current]?.classList.remove("active");
+          slides[current].classList.remove("active");
+          dots[current]?.classList.remove("active");
 
-        current = index;
+          current = index;
 
-        slides[current].classList.add("active");
-        dots[current]?.classList.add("active");
+          slides[current].classList.add("active");
+          dots[current]?.classList.add("active");
         }
 
-        // Click en los puntos
+        // Click en puntos
         dots.forEach((dot) => {
-        dot.addEventListener("click", () => {
+          dot.addEventListener("click", () => {
             const idx = parseInt(dot.dataset.index, 10);
             goTo(idx);
             resetTimer();
-        });
+          });
         });
 
         // Auto-slide
         let timer = null;
 
         function startTimer() {
-        if (slides.length <= 1) return;
-        timer = setInterval(() => {
+          if (slides.length <= 1) return;
+          timer = setInterval(() => {
             const next = (current + 1) % slides.length;
             goTo(next);
-        }, 5000); // 5 segundos
+          }, 5000); // 5 s
         }
 
         function resetTimer() {
-        if (timer) clearInterval(timer);
-        startTimer();
+          if (timer) clearInterval(timer);
+          startTimer();
         }
 
         goTo(0);
         startTimer();
-    });
+      });
     }
 
-    
-
+    /* ---- Arranque general: caos → orden + hero + portfolio ---- */
     window.addEventListener("load", () => {
       const hero = document.getElementById("hero-content");
 
@@ -873,565 +950,784 @@
           hero.style.opacity = "1";
           revealSequence();
           initProjectSliders();
-          initHoverGifs(); // 👈 se inicializa aquí
+          initHoverGifs();
         });
       }, chaosDuration);
     });
   </script>
 
+  <!-- ====================================================
+       PORTFOLIO SECTION
+  ===================================================== -->
+  <section
+    id="portfolio"
+    class="border-t border-slate-800/80 bg-slate-950 py-16"
+  >
+    <div class="max-w-6xl mx-auto px-6 md:px-10">
+      <!-- Header -->
+      <div class="mb-8 md:mb-10">
+        <p class="text-[11px] uppercase tracking-[0.28em] text-emerald-300 mb-3">
+          Portfolio · Data systems
+        </p>
+        <h2 class="text-2xl md:text-3xl font-semibold mb-3">
+          Systems I&apos;ve built for real teams.
+        </h2>
+        <p class="text-sm md:text-base text-slate-300 max-w-2xl">
+          From messy spreadsheets and ERP exports to automated dashboards, alerts and
+          AI workflows — these are snapshots of how I turn data chaos into something
+          your teams can actually use.
+        </p>
+      </div>
 
-
-
-  <!-- **********************************************************************************************************+ -->
-  <!-- Portfolio Section -->
-
-  <!-- ========= PORTFOLIO / SYSTEMS SECTION ========= -->
-<section
-  id="portfolio"
-  class="border-t border-slate-800/80 bg-slate-950 py-16"
->
-  <div class="max-w-6xl mx-auto px-6 md:px-10">
-    <!-- Header -->
-    <div class="mb-8 md:mb-10">
-      <p class="text-[11px] uppercase tracking-[0.28em] text-emerald-300 mb-3">
-        Portfolio · Data systems
-      </p>
-      <h2 class="text-2xl md:text-3xl font-semibold mb-3">
-        Systems I&apos;ve built for real teams.
-      </h2>
-      <p class="text-sm md:text-base text-slate-300 max-w-2xl">
-        From messy spreadsheets and ERP exports to automated dashboards, alerts and
-        AI workflows — these are snapshots of how I turn data chaos into something
-        your teams can actually use.
-      </p>
-    </div>
-
-    <!-- Simple filter chips (solo visual por ahora) -->
-    <div class="flex flex-wrap gap-2 mb-8 text-[11px] md:text-xs text-slate-300">
-      <button
-        class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/70 text-emerald-100"
-      >
-        All
-      </button>
-      <button
-        class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
-      >
-        Marketing &amp; Sales
-      </button>
-      <button
-        class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
-      >
-        Finance &amp; Ops
-      </button>
-      <button
-        class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
-      >
-        AI &amp; Automation
-      </button>
-    </div>
-
-    <!-- Grid de proyectos -->
-    <div class="grid gap-6 md:gap-7 md:grid-cols-2">
-        <!-- CARD1 – Sales & Target Tracking Dashboard (Power BI) -->
-        <article
-        class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
-        data-hover-gif
+      <!-- Filtros (por ahora solo visuales) 
+      <div class="flex flex-wrap gap-2 mb-8 text-[11px] md:text-xs text-slate-300">
+        <button
+          class="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/70 text-emerald-100"
         >
-        <!-- Thumbnail del dashboard -->
-        <!-- Slider de imágenes del dashboard -->
-        <div class="project-slider relative h-52 md:h-60">
-        <!-- Slides (pon 2–3 capturas distintas) -->
-        <div class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]">
-          <img
-            src="project-sales-target-static.png"
-            data-static="project-sales-target-static.png"
-            data-animated="project-sales-target.gif"
-            alt="Sales & Target Tracking dashboard demo"
-            class="w-full h-full object-contain"
-          />
-          <div class="project-slider-overlay"></div>
-        </div>
-
-        <!-- Degradado por encima para que el texto sea legible -->
-        <div class="project-slider-overlay"></div>
-        </div>
-
-        <!-- Contenido -->
-        <div class="p-4 md:p-5 space-y-3">
-            <div class="flex items-center justify-between gap-2">
-            <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Sales · Power BI dashboard
-            </p>
-            <span
-                class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
-            >
-                Data visualization
-            </span>
-            </div>
-
-            <h3 class="text-sm md:text-base font-semibold text-slate-50">
-            Sales &amp; Target Tracking by Sales Rep
-            </h3>
-
-            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-slate-200">Overview:</span>
-            interactive Power BI report that monitors sales performance vs. targets
-            by sales rep.
-            </p>
-
-            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-emerald-300">What it does:</span>
-            in ~30 seconds, managers can see if each rep is hitting target, how
-            sales compare to last year, and which customers/brands explain the gap.
-            Dynamic titles, KPI cards, bullet charts and a narrative DAX measure
-            turn raw numbers into an explanatory story.
-            </p>
-
-            <!-- Mini KPIs -->
-            <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
-            <li>• Target vs. actual by rep, customer area and brand.</li>
-            <li>• Year-over-year growth in sales and units.</li>
-            <li>• Ranked view of customers and brands with biggest decline.</li>
-            </ul>
-
-            <!-- Stack + links -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <p class="text-[10px] text-slate-500">
-                Stack: Power BI · DAX · Excel source files
-            </p>
-            <div class="flex flex-wrap gap-2 text-[11px]">
-                <!-- TODO: pega aquí tu URL pública de Power BI -->
-                <a
-                href="https://app.powerbi.com/view?r=TU_URL_COMPLETA_AQUI"
-                target="_blank"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
-                >
-                <span>View live report</span>
-                <span class="text-xs">↗</span>
-                </a>
-            </div>
-            </div>
-        </div>
-        </article>
-
-      <!-- CARD 2 – Ops / OEE / logística -->
-        <article
-        class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
-        data-hover-gif
+          All
+        </button>
+        <button
+          class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
         >
-        <!-- Thumbnail del dashboard -->
-        <!-- Slider de imágenes del dashboard -->
-        <div class="project-slider relative h-52 md:h-60">
-        <!-- Slides (pon 2–3 capturas distintas) -->
-        <div
-          class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]"
+          Marketing &amp; Sales
+        </button>
+        <button
+          class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
+        >
+          Finance &amp; Ops
+        </button>
+        <button
+          class="px-3 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 hover:border-emerald-400/60 hover:text-emerald-200 transition"
+        >
+          AI &amp; Automation
+        </button>
+      </div>
+      -->  
+      <!-- Grid de proyectos -->
+      <div class="grid gap-6 md:gap-7 md:grid-cols-2">
+        <!-- ========== CARD 1 – Sales & Target Tracking Dashboard ========== -->
+        <article
+          class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
           data-hover-gif
         >
-          <img
-            src="Project_PBI_Porfolio.png"
-            data-static="Project_PBI_Porfolio.png"
-            data-animated="Project_PBI_Porfolio.gif"
-            alt="Sales & Target Tracking dashboard demo"
-            class="w-full h-full object-contain"
-          />
-          <div class="project-slider-overlay"></div>
-        </div>
+          <!-- Thumbnail (GIF en hover) -->
+          <div class="project-slider relative h-52 md:h-60">
+            <div class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]">
+              <img
+                src="project_sales.png"
+                data-static="project_sales2.png"
+                data-animated="pproject_sales.gif"
+                alt="Sales & Target Tracking dashboard demo"
+                class="w-full h-full object-contain"
+              />
+              <div class="project-slider-overlay"></div>
+            </div>
+            <div class="project-slider-overlay"></div>
+          </div>
 
-        <!-- Degradado por encima para que el texto sea legible -->
-        <div class="project-slider-overlay"></div>
-        </div>
-
-        <!-- Contenido -->
-        <div class="p-4 md:p-5 space-y-3">
+          <!-- Contenido -->
+          <div class="p-4 md:p-5 space-y-3">
             <div class="flex items-center justify-between gap-2">
-            <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+              <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
                 Sales · Power BI dashboard
-            </p>
-            <span
+              </p>
+              <span
                 class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
-            >
+              >
                 Data visualization
-            </span>
+              </span>
             </div>
 
             <h3 class="text-sm md:text-base font-semibold text-slate-50">
-            Sales &amp; Target Tracking by Sales Rep
+              Sales &amp; Target Tracking by Sales Rep
             </h3>
 
             <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-slate-200">Overview:</span>
-            interactive Power BI report that monitors sales performance vs. targets
-            by sales rep.
+              <span class="font-semibold text-slate-200">Overview:</span>
+              interactive Power BI report that monitors sales performance vs. targets
+              by sales rep.
             </p>
 
             <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-emerald-300">What it does:</span>
-            in ~30 seconds, managers can see if each rep is hitting target, how
-            sales compare to last year, and which customers/brands explain the gap.
-            Dynamic titles, KPI cards, bullet charts and a narrative DAX measure
-            turn raw numbers into an explanatory story.
+              <span class="font-semibold text-emerald-300">What it does:</span>
+              in ~30 seconds, managers can see if each rep is hitting target, how
+              sales compare to last year, and which customers/brands explain the gap.
+              Dynamic titles, KPI cards, bullet charts and a narrative DAX measure
+              turn raw numbers into an explanatory story.
             </p>
 
             <!-- Mini KPIs -->
             <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
-            <li>• Target vs. actual by rep, customer area and brand.</li>
-            <li>• Year-over-year growth in sales and units.</li>
-            <li>• Ranked view of customers and brands with biggest decline.</li>
+              <li>• Target vs. actual by rep, customer area and brand.</li>
+              <li>• Year-over-year growth in sales and units.</li>
+              <li>• Ranked view of customers and brands with biggest decline.</li>
             </ul>
 
             <!-- Stack + links -->
             <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <p class="text-[10px] text-slate-500">
-                Stack: Power BI · DAX · Excel source files
-            </p>
-            <div class="flex flex-wrap gap-2 text-[11px]">
-                <!-- TODO: pega aquí tu URL pública de Power BI -->
+              <p class="text-[10px] text-slate-500">
+                Stack: Power BI · DAX · SQL / ERP 
+              </p>
+              <div class="flex flex-wrap gap-2 text-[11px]">
                 <a
-                href="https://app.powerbi.com/view?r=TU_URL_COMPLETA_AQUI"
-                target="_blank"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
+                  href="https://app.powerbi.com/view?r=eyJrIjoiMzBkMzNmZTctYzczMy00NTdlLTkwMWUtZjdjYWYwZjI2ZDAxIiwidCI6IjhlYzY5MDkxLWEwMjItNGNkZC05OGFhLWQxNDdmYjM0YzFlNCJ9&pageName=5a37c28fbf98d754ab1b"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
                 >
-                <span>View live report</span>
-                <span class="text-xs">↗</span>
+                  <span>View live report</span>
+                  <span class="text-xs">↗</span>
                 </a>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
         </article>
 
-      <!-- CARD 3 – AI & Automation / n8n + agentes -->
+        <!-- ========== CARD 2 – Interactive Power BI Résumé ========== -->
         <article
-        class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
-        data-hover-gif
-        >
-        <!-- Thumbnail del dashboard -->
-        <!-- Slider de imágenes del dashboard -->
-        <div class="project-slider relative h-52 md:h-60">
-        <!-- Slides (pon 2–3 capturas distintas) -->
-        <div
-          class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]"
+          class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
           data-hover-gif
         >
-          <img
-            src="Project_Pareto.png"
-            data-static="Project_Pareto.png"
-            data-animated="Project_Pareto.gif"
-            alt="Sales & Target Tracking dashboard demo"
-            class="w-full h-full object-contain"
-          />
-          <div class="project-slider-overlay"></div>
-        </div>
-
-        <!-- Degradado por encima para que el texto sea legible -->
-        <div class="project-slider-overlay"></div>
-        </div>
-
-        <!-- Contenido -->
-        <div class="p-4 md:p-5 space-y-3">
-            <div class="flex items-center justify-between gap-2">
-            <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-                Sales · Power BI dashboard
-            </p>
-            <span
-                class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
+          <div class="project-slider relative h-52 md:h-60">
+            <div
+              class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]"
+              data-hover-gif
             >
+              <img
+                src="Project_PBI_Porfolio.png"
+                data-static="Project_PBI_Porfolio.png"
+                data-animated="Project_PBI_Porfolio.gif"
+                alt="Interactive Power BI résumé"
+                class="w-full h-full object-contain"
+              />
+              <div class="project-slider-overlay"></div>
+            </div>
+            <div class="project-slider-overlay"></div>
+          </div>
+
+          <div class="p-4 md:p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                Career · Power BI résumé
+              </p>
+              <span
+                class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
+              >
                 Data visualization
-            </span>
+              </span>
             </div>
 
             <h3 class="text-sm md:text-base font-semibold text-slate-50">
-            Sales &amp; Target Tracking by Sales Rep
+              Interactive Power BI résumé
             </h3>
 
             <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-slate-200">Overview:</span>
-            interactive Power BI report that monitors sales performance vs. targets
-            by sales rep.
+              <span class="font-semibold text-slate-200">Overview:</span>
+              single-page interactive résumé that brings together my career timeline,
+              skills radar and certifications in one Power BI report.
             </p>
 
             <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-emerald-300">What it does:</span>
-            in ~30 seconds, managers can see if each rep is hitting target, how
-            sales compare to last year, and which customers/brands explain the gap.
-            Dynamic titles, KPI cards, bullet charts and a narrative DAX measure
-            turn raw numbers into an explanatory story.
+              <span class="font-semibold text-emerald-300">What it does:</span>
+              lets recruiters hover over each role to see key achievements, explore my
+              skills and certifications in context, and download a PDF version on
+              demand. It shows how I use Power BI for data storytelling, not just
+              dashboards.
             </p>
 
-            <!-- Mini KPIs -->
             <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
-            <li>• Target vs. actual by rep, customer area and brand.</li>
-            <li>• Year-over-year growth in sales and units.</li>
-            <li>• Ranked view of customers and brands with biggest decline.</li>
+              <li>• Career timeline with tenure and progression by role.</li>
+              <li>• Skills radar and certification list in a visual, scannable layout.</li>
+              <li>• Downloadable résumé and filters by technology or focus area.</li>
             </ul>
 
-            <!-- Stack + links -->
             <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <p class="text-[10px] text-slate-500">
-                Stack: Power BI · DAX · Excel source files
-            </p>
-            <div class="flex flex-wrap gap-2 text-[11px]">
-                <!-- TODO: pega aquí tu URL pública de Power BI -->
+              <p class="text-[10px] text-slate-500">
+                Stack: Power BI · DAX · Excel data model · Custom layout design
+              </p>
+              <div class="flex flex-wrap gap-2 text-[11px]">
                 <a
-                href="https://app.powerbi.com/view?r=TU_URL_COMPLETA_AQUI"
-                target="_blank"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
+                  href="https://app.powerbi.com/view?r=eyJrIjoiM2FlMjVmNmUtMGUwYS00ZWIzLTliOTItNWM4Y2M0Y2I4ZmFkIiwidCI6IjhlYzY5MDkxLWEwMjItNGNkZC05OGFhLWQxNDdmYjM0YzFlNCJ9"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
                 >
-                <span>View live report</span>
-                <span class="text-xs">↗</span>
+                  <span>View live report</span>
+                  <span class="text-xs">↗</span>
                 </a>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
         </article>
 
-      <!-- CARD 4 – Finance / Contabilidad (opcional) -->
-      <article
-        class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
-      >
-        <div class="relative h-40 md:h-44 overflow-hidden">
-          <!-- TODO: reemplaza src por tu thumbnail real -->
-          <img
-            src="project-finance.png"
-            alt="Finance & accounting dashboard"
-            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/0 to-slate-950/20"></div>
-        </div>
 
-        <div class="p-4 md:p-5 space-y-3">
-          <div class="flex items-center justify-between gap-2">
-            <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
-              Finance · Accounting
-            </p>
-            <span class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60">
-              Financial analytics
-            </span>
+        <!-- ========== CARD 3 – Pareto Analysis: Top-Selling Products YTD ========== -->
+        <article
+          class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
+          data-hover-gif
+        >
+          <div class="project-slider relative h-52 md:h-60">
+            <div
+              class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]"
+              data-hover-gif
+            >
+              <img
+                src="Project_Pareto.png"
+                data-static="Project_Pareto.png"
+                data-animated="Project_Pareto.gif"
+                alt="Pareto analysis dashboard demo"
+                class="w-full h-full object-contain"
+              />
+              <div class="project-slider-overlay"></div>
+            </div>
+            <div class="project-slider-overlay"></div>
           </div>
 
-          <h3 class="text-sm md:text-base font-semibold text-slate-50">
-            P&amp;L, cashflow &amp; AR dashboard
-          </h3>
+          <div class="p-4 md:p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                Sales · Pareto analysis · Power BI
+              </p>
+              <span
+                class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
+              >
+                Data visualization
+              </span>
+            </div>
 
-          <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-slate-200">Before:</span>
-            monthly static PDFs and Excel files for P&amp;L, receivables and cashflow,
-            hard to consolidate and filter by client or segment.
-          </p>
-          <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
-            <span class="font-semibold text-emerald-300">After:</span>
-            interactive Power BI reports with drill-down by customer, region and time,
-            plus alerts for overdue balances.
-          </p>
+            <h3 class="text-sm md:text-base font-semibold text-slate-50">
+              Pareto Analysis: Top-Selling Products YTD
+            </h3>
 
-          <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
-            <li>• Faster review cycles for management and finance.</li>
-            <li>• Clear view of revenue, margin and aging.</li>
-            <li>• Less time cleaning and merging spreadsheets.</li>
-          </ul>
-
-          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <p class="text-[10px] text-slate-500">
-              Stack: Power BI · SQL · Excel · Accounting system exports
+            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
+              <span class="font-semibold text-slate-200">Overview:</span>
+              interactive Power BI report that identifies the small set of products
+              generating most of the year-to-date revenue and tracks their YoY
+              performance at a glance.
             </p>
-            <div class="flex flex-wrap gap-2 text-[11px]">
-              <!-- TODO: URL real si aplica -->
-              <a
-                href="#"
-                target="_blank"
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
-              >
-                <span>View sample</span>
-                <span class="text-xs">↗</span>
-              </a>
-              <button
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-[10px] cursor-default"
-              >
-                Case study · soon
-              </button>
+
+            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
+              <span class="font-semibold text-emerald-300">What it does:</span>
+              ranks ~200 products by YTD sales, calculates cumulative contribution
+              and isolates the Pareto set. Users can switch between a ranked table
+              (with mini-sparklines and YoY deltas) and a classic column-line Pareto
+              chart via a bookmark button, with dynamic KPI cards summarising total
+              items, Pareto items and their revenue share.
+            </p>
+
+            <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
+              <li>• Automatically isolates the products that drive ~80% of revenue.</li>
+              <li>• Table view with mini-sparklines and YoY growth per product.</li>
+              <li>• Filters by brand, customer, channel and sales rep.</li>
+            </ul>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <p class="text-[10px] text-slate-500">
+                Stack: Power BI · DAX · SQL / ERP 
+              </p>
+              <div class="flex flex-wrap gap-2 text-[11px]">
+                <a
+                  href="https://app.powerbi.com/view?r=eyJrIjoiNjdkZmY2MDYtNWFlMS00NDg1LWE3NGQtN2ZiNGFjYjAzYTcwIiwidCI6IjhlYzY5MDkxLWEwMjItNGNkZC05OGFhLWQxNDdmYjM0YzFlNCJ9"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
+                >
+                  <span>View live report</span>
+                  <span class="text-xs">↗</span>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
+        </article>
 
-  <!-- **********************************************************************************************************+ -->
-  
-  <!-- Sección LET'S CONNECT -->
-  <section id="contact" class="border-t border-slate-800/80 bg-slate-950/95">
-    <div class="max-w-6xl mx-auto px-6 md:px-10 py-14 grid gap-10 md:grid-cols-2 items-start">
+
+
+
+        <!-- ========== CARD 4 – Personal portfolio & AI site ========== -->
+        <article
+          class="group bg-slate-900/80 border border-slate-700/80 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-transform duration-300"
+          data-hover-gif
+        >
+          <div class="project-slider relative h-52 md:h-60">
+            <div
+              class="relative overflow-hidden rounded-t-3xl bg-slate-900 aspect-[16/9]"
+              data-hover-gif
+            >
+              <img
+                src="Project_website.png"
+                data-static="Project_website.png"
+                data-animated="Project_website.gif"
+                alt="Pareto analysis dashboard demo"
+                class="w-full h-full object-contain"
+              />
+              <div class="project-slider-overlay"></div>
+            </div>
+            <div class="project-slider-overlay"></div>
+          </div>
+
+          <div class="p-4 md:p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <p class="text-[10px] uppercase tracking-[0.18em] text-slate-400">
+                Personal site · AI &amp; Automation
+              </p>
+              <span
+                class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-200 border border-emerald-400/60"
+              >
+                Portfolio website
+              </span>
+            </div>
+
+            <h3 class="text-sm md:text-base font-semibold text-slate-50">
+              Personal Analytics &amp; AI Portfolio
+            </h3>
+
+            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
+              <span class="font-semibold text-slate-200">Overview:</span>
+                single-page portfolio that showcases my analytics projects, live
+                dashboards and a mini AI agent that answers questions about my
+                experience and tech stack.
+            </p>
+
+            <p class="text-[11px] md:text-xs text-slate-400 leading-relaxed">
+              <span class="font-semibold text-emerald-300">What it does:</span>
+              combines an animated “data chaos → clarity” hero, embedded Power BI
+              reports and an AI intro agent running on serverless functions, so
+              recruiters can explore my work and ask questions in one place.
+            </p>
+
+            <ul class="text-[11px] md:text-xs text-slate-300 space-y-1">
+              <li>• Hero section that turns noisy numbers into a clear story.</li>
+              <li>• Live previews of key Power BI dashboards and projects.</li>
+              <li>• Custom AI agent to answer questions and suggest next steps.</li>
+            </ul>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <p class="text-[10px] text-slate-500">
+                Stack: HTML · Tailwind CSS · Vercel · Power BI · OpenAI API
+              </p>
+              <div class="flex flex-wrap gap-2 text-[11px]">
+                <!-- TODO: pon aquí la URL final de tu sitio -->
+                <a
+                  href="https://fener-site.vercel.app/"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-700 text-emerald-200 hover:border-emerald-400/70 hover:text-emerald-100 transition"
+                >
+                  <span>View live site</span>
+                  <span class="text-xs">↗</span>
+                </a>
+                <button
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-[10px] cursor-default"
+                >
+                  Includes AI intro agent
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+             
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================
+       SECCIÓN LET'S CONNECT (chat embebido)
+  ===================================================== -->
+<!-- ───────────────── LET'S CONNECT (versión simple, sin chat incrustado) ───────────────── -->
+  <section id="contact" class="border-t border-slate-800/80 bg-slate-950/95 min-h-screen flex items-center">
+    <div class="max-w-6xl mx-auto px-6 md:px-10 py-16 grid gap-10 md:grid-cols-[1.4fr,1fr] items-center">
       
-      <!-- Texto + CTAs -->
+      <!-- Texto principal -->
       <div>
         <p class="text-[11px] uppercase tracking-[0.28em] text-emerald-300 mb-3">
           Let&apos;s connect
         </p>
         <h2 class="text-2xl md:text-3xl font-semibold mb-4">
-          Want to see how this could work for your data?
+          Ready to talk about your data?
         </h2>
-        <p class="text-slate-300 text-sm md:text-base mb-6 max-w-md">
-          Ask my mini-agent anything about my experience, tech stack or projects.
-          If you prefer, skip the chat and jump straight into a call.
+        <p class="text-slate-300 text-sm md:text-base mb-4 max-w-xl">
+          Whether you need a first Power BI dashboard, want to automate reports,
+          or are thinking about AI agents on top of your data stack, I&apos;d be happy
+          to walk through ideas and concrete next steps.
         </p>
 
+        <ul class="text-[12px] md:text-sm text-slate-400 space-y-1 mb-6">
+          <li>• Quick review of your current reporting and pain points.</li>
+          <li>• Ideas for dashboards, automations or AI workflows.</li>
+          <li>• What a 2–4 week engagement could look like.</li>
+        </ul>
+
         <div class="flex flex-wrap gap-3 text-sm">
-          <a href="mailto:tu_correo@loquesea.com"
-            class="px-4 py-2 rounded-full border border-slate-600 text-slate-100 hover:bg-slate-800 transition">
+          <a
+            href="mailto:fenerposada@outlook.com"
+            class="px-4 py-2 rounded-full border border-slate-600 text-slate-100 hover:bg-slate-800 transition"
+          >
             Email me
           </a>
-          <a href="https://www.linkedin.com/in/fener-posada/" target="_blank"
-            class="px-4 py-2 rounded-full border border-slate-600 text-slate-100 hover:bg-slate-800 transition">
+          <a
+            href="https://www.linkedin.com/in/fener-posada/"
+            target="_blank"
+            class="px-4 py-2 rounded-full border border-slate-600 text-slate-100 hover:bg-slate-800 transition"
+          >
             LinkedIn
           </a>
-          <a href="https://calendly.com/tu-usuario/intro-call" target="_blank"
-            class="px-4 py-2 rounded-full bg-emerald-400 text-slate-950 font-medium hover:bg-emerald-300 transition">
-            Book a 20-min call
+          <a
+            href="https://calendly.com/fenerposada/30min"
+            target="_blank"
+            class="px-4 py-2 rounded-full bg-emerald-400 text-slate-950 font-medium hover:bg-emerald-300 transition"
+          >
+            Book a 30-min call
           </a>
         </div>
       </div>
 
-      <!-- Tarjeta chat-bot -->
-      <div class="bg-slate-900/80 border border-slate-700/80 rounded-2xl p-4 shadow-lg shadow-black/40">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="h-8 w-8 rounded-full bg-emerald-500/20 border border-emerald-400/70 flex items-center justify-center">
-            🤖
-          </div>
-          <div>
-            <p class="text-xs uppercase tracking-[0.2em] text-slate-400">AI intro agent</p>
-            <p class="text-sm text-slate-100">Ask my AI agent</p>
-          </div>
-        </div>
-
-        <div id="chat-window" class="h-56 overflow-y-auto space-y-3 text-[13px] pr-1">
-          <div class="flex items-start gap-2">
-            <div class="h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">🤖</div>
-            <div class="bg-slate-800/90 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[80%]">
-              <p class="text-emerald-100">
-                Hi, I’m Fener’s mini-agent. Ask about his experience, tech stack or book a call.
-              </p>
-              <p class="mt-1 text-[11px] text-slate-400">
-                Try: <span class="italic">"What tools does he use?"</span> or <span class="italic">"Schedule a meeting"</span>.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <form id="chat-form" class="mt-4 flex items-center gap-2">
-          <input
-            id="chat-input"
-            type="text"
-            placeholder="Ask about tools, experience or book a call..."
-            class="flex-1 bg-slate-900 border border-slate-700 rounded-full px-3 py-2 text-xs md:text-sm text-slate-100 focus:outline-none focus:border-emerald-400"
-          />
-
-          <button
-            type="submit"
-            class="px-3 py-2 rounded-full bg-emerald-400 text-slate-950 text-xs font-semibold hover:bg-emerald-300 transition">
-            Send
-          </button>
-        </form>
-                  <p class="mt-1 text-[10px] text-slate-500">
-            Sample AI agent –------- responses are tailored to Fener’s profile.
-          </p>
+      <!-- Tarjeta lateral corta -->
+      <div class="bg-slate-900/80 border border-slate-700/80 rounded-2xl p-5 shadow-lg shadow-black/40">
+        <p class="text-[11px] uppercase tracking-[0.22em] text-slate-400 mb-2">
+          What you can expect
+        </p>
+        <p class="text-sm text-slate-100 mb-3">
+          A practical conversation focused on your data, not buzzwords.
+        </p>
+        <ul class="text-[12px] text-slate-300 space-y-1 mb-4">
+          <li>• No obligation, just ideas and options.</li>
+          <li>• Clear next steps if we&apos;re a good match.</li>
+          <li>• Honest feedback on what&apos;s realistic.</li>
+        </ul>
+        <p class="text-[11px] text-slate-500">
+          Prefer to explore first? Use the <span class="text-emerald-300">AI agent</span>
+          in the bottom-right corner to ask quick questions about my experience and projects.
+        </p>
       </div>
+
     </div>
   </section>
 
- <script>
-  const chatWindow = document.getElementById("chat-window");
-  const chatForm = document.getElementById("chat-form");
-  const chatInput = document.getElementById("chat-input");
+  <!-- Script: chat embebido (panel de la sección) -->
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
 
-  // Opcional: historial local para enviar contexto al backend
-  const chatHistory = [];
+    // Historial simple para enviar contexto al backend si quieres
+    const chatHistory = [];
 
-  function addMessage(text, from = "user") {
-    const wrapper = document.createElement("div");
-    wrapper.className =
-      "flex items-start gap-2 " + (from === "user" ? "justify-end" : "");
+    function addMessage(text, from = "user") {
+      const wrapper = document.createElement("div");
+      wrapper.className =
+        "flex items-start gap-2 " + (from === "user" ? "justify-end" : "");
 
-    const bubble = document.createElement("div");
-    bubble.className =
-      (from === "user"
-        ? "bg-emerald-500/20 text-emerald-100 rounded-2xl rounded-tr-sm"
-        : "bg-slate-800/90 text-slate-100 rounded-2xl rounded-tl-sm") +
-      " px-3 py-2 max-w-[80%] text-[13px]";
+      const bubble = document.createElement("div");
+      bubble.className =
+        (from === "user"
+          ? "bg-emerald-500/20 text-emerald-100 rounded-2xl rounded-tr-sm"
+          : "bg-slate-800/90 text-slate-100 rounded-2xl rounded-tl-sm") +
+        " px-3 py-2 max-w-[80%] text-[13px]";
 
-    bubble.textContent = text;
+      bubble.textContent = text;
 
-    if (from === "user") {
-      wrapper.appendChild(bubble);
-    } else {
-      const avatar = document.createElement("div");
-      avatar.className =
-        "h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs";
-      avatar.textContent = "🤖";
-      wrapper.appendChild(avatar);
-      wrapper.appendChild(bubble);
-    }
-
-    chatWindow.appendChild(wrapper);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  async function callAgent(message) {
-    try {
-      const response = await fetch("/api/agent", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message,
-          history: chatHistory.slice(-6) // opcional: últimos mensajes
-        })
-      });
-
-      if (!response.ok) {
-        console.error("Agent HTTP error:", response.status);
-        addMessage(
-          "There was an issue contacting the agent. Please try again in a moment.",
-          "bot"
-        );
-        return;
+      if (from === "user") {
+        wrapper.appendChild(bubble);
+      } else {
+        const avatar = document.createElement("div");
+        avatar.className =
+          "h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs";
+        avatar.textContent = "🤖";
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
       }
 
-      const data = await response.json();
-      const reply =
-        data?.reply ||
-        "Sorry, I couldn't generate a reply right now, please try again.";
-
-      addMessage(reply, "bot");
-
-      // Guardamos en historial (por si luego quieres usarlo en el backend)
-      chatHistory.push({ role: "user", content: message });
-      chatHistory.push({ role: "assistant", content: reply });
-    } catch (err) {
-      console.error("Agent fetch error:", err);
-      addMessage(
-        "Network error talking to the agent. Check your connection and try again.",
-        "bot"
-      );
+      chatWindow.appendChild(wrapper);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
     }
-  }
 
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const text = chatInput.value.trim();
-    if (!text) return;
+    async function callAgent(message) {
+      try {
+        const response = await fetch("/api/agent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message,
+            history: chatHistory.slice(-6) // últimos mensajes si quieres contexto
+          })
+        });
 
-    // Pintar mensaje del usuario
-    addMessage(text, "user");
-    chatInput.value = "";
+        if (!response.ok) {
+          console.error("Agent HTTP error:", response.status);
+          addMessage(
+            "There was an issue contacting the agent. Please try again in a moment.",
+            "bot"
+          );
+          return;
+        }
 
-    // Llamar al backend con IA real
-    callAgent(text);
-  });
-</script>
-</body>
-</html>
+        const data = await response.json();
+        const reply =
+          data?.reply ||
+          "Sorry, I couldn't generate a reply right now, please try again.";
 
+        addMessage(reply, "bot");
 
+        chatHistory.push({ role: "user", content: message });
+        chatHistory.push({ role: "assistant", content: reply });
+      } catch (err) {
+        console.error("Agent fetch error:", err);
+        addMessage(
+          "Network error talking to the agent. Check your connection and try again.",
+          "bot"
+        );
+      }
+    }
+
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      chatInput.value = "";
+      callAgent(text);
+    });
+  </script>
+
+  <!-- ====================================================
+       WIDGET FLOTANTE: AI AGENT
+  ===================================================== -->
+  <div id="agent-widget-root" class="fixed bottom-4 right-4 z-40">
+    <!-- Botón flotante -->
+    <button
+      id="agent-toggle-btn"
+      class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500 text-slate-950 text-sm font-semibold shadow-xl shadow-emerald-500/40 hover:bg-emerald-400 transition"
+    >
+      <span class="text-lg">🤖</span>
+      <span class="hidden sm:inline">Talk to my AI agent</span>
+    </button>
+
+    <!-- Ventana de chat flotante -->
+    <div
+      id="agent-panel"
+      class="hidden mt-3 w-[320px] sm:w-[360px] max-h-[540px] bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl shadow-black/60 flex flex-col overflow-hidden"
+    >
+      <!-- Header -->
+      <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <!--
+          <div
+            class="h-8 w-8 rounded-full bg-emerald-500/20 border border-emerald-400/70 flex items-center justify-center text-lg"
+          >
+            🤖
+          </div>
+          -->
+          <div>
+            <p class="text-xs font-semibold text-emerald-300 uppercase tracking-[0.18em]">
+              AI intro agent
+            </p>
+            <!--
+            <p class="text-sm text-slate-100 leading-tight">
+              Ask about my experience or projects
+            </p>
+            -->
+          </div>
+        </div>
+        <button
+          id="agent-close-btn"
+          class="text-slate-500 hover:text-slate-300 text-xl leading-none"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+
+      <!-- Mensajes del widget -->
+      <div
+        id="agent-messages"
+        class="flex-1 px-3 py-3 space-y-3 overflow-y-auto text-[13px] bg-gradient-to-b from-slate-950/40 to-slate-900/60"
+      >
+        <!-- Mensaje inicial -->
+        <div class="flex items-start gap-2">
+          <div
+            class="mt-1 h-7 w-7 rounded-full bg-emerald-500/20 border border-emerald-400/70 flex items-center justify-center text-sm"
+          >
+            🤖
+          </div>
+          <div class="max-w-[80%] rounded-2xl bg-slate-800/80 px-3 py-2 text-slate-100">
+            <p class="font-medium text-xs text-emerald-300 mb-1">
+              Hi, I’m Fener’s mini-agent 👋
+            </p>
+            <p>
+              Ask about my experience, tech stack or projects. I can also suggest how he could
+              help your team with dashboards and automations.
+            </p>
+            <p class="mt-1 text-[11px] text-slate-400">
+              Try:
+              <span class="italic">“What tools do I use? How can I contribute to your organization?”</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input del widget -->
+      <form
+        id="agent-form"
+        class="border-t border-slate-800 px-3 py-2 flex items-center gap-2 bg-slate-950/80"
+      >
+        <input
+          id="agent-input"
+          type="text"
+          autocomplete="off"
+          placeholder="Type your question..."
+          class="flex-1 bg-slate-900/80 border border-slate-700/80 rounded-full px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+        />
+        <button
+          type="submit"
+          class="px-3 py-[6px] rounded-full bg-emerald-500 text-slate-950 text-sm font-semibold hover:bg-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          Send
+        </button>
+      </form>
+
+      <p class="px-4 pb-3 pt-1 text-[10px] text-slate-500 border-t border-slate-900/80">
+        Sample AI agent — responses are tailored to Fener’s profile.
+      </p>
+    </div>
+  </div>
+
+  <!-- Script: lógica del widget flotante (abre después del caos) -->
+  <script>
+    (function () {
+      const panel = document.getElementById("agent-panel");
+      const toggleBtn = document.getElementById("agent-toggle-btn");
+      const closeBtn = document.getElementById("agent-close-btn");
+      const form = document.getElementById("agent-form");
+      const input = document.getElementById("agent-input");
+      const messages = document.getElementById("agent-messages");
+
+      if (!panel || !toggleBtn || !form || !input || !messages) return;
+
+      let isOpen = false;
+      let isSending = false;
+
+      function showToggle() {
+        toggleBtn.classList.remove("hidden");
+        toggleBtn.classList.add("flex");
+      }
+
+      function hideToggle() {
+        toggleBtn.classList.add("hidden");
+        toggleBtn.classList.remove("flex");
+      }
+
+      function openPanel() {
+        if (isOpen) return;
+        panel.classList.remove("hidden");
+        panel.classList.add("animate-fade-in-up");
+        isOpen = true;
+        hideToggle(); // ocultar botón cuando el panel está abierto
+        setTimeout(() => input.focus(), 150);
+      }
+
+      function closePanel() {
+        if (!isOpen) return;
+        panel.classList.add("hidden");
+        panel.classList.remove("animate-fade-in-up");
+        isOpen = false;
+        showToggle(); // mostrar botón al cerrar
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        isOpen ? closePanel() : openPanel();
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener("click", closePanel);
+      }
+
+      // Cerrar con ESC
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closePanel();
+      });
+
+      // Mostrar y auto-abrir después del caos inicial
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          showToggle();
+          setTimeout(() => {
+            openPanel();
+          }, 1200);
+        }, 7800); // sincronizado con tu animación de caos
+      });
+
+      // (Opcional) conectar CTA del hero si le añades id="cta-ai-agent" en el futuro
+      const heroCta = document.getElementById("cta-ai-agent");
+      if (heroCta) {
+        heroCta.addEventListener("click", (e) => {
+          e.preventDefault();
+          openPanel();
+        });
+      }
+
+      // Helpers UI para mensajes del widget
+      function appendUserMessage(text) {
+        const row = document.createElement("div");
+        row.className = "flex justify-end";
+        const bubble = document.createElement("div");
+        bubble.className =
+          "max-w-[80%] rounded-2xl bg-emerald-500 text-slate-950 px-3 py-2 text-sm";
+        bubble.textContent = text;
+        row.appendChild(bubble);
+        messages.appendChild(row);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function appendBotMessage(text) {
+        const row = document.createElement("div");
+        row.className = "flex items-start gap-2 mt-2";
+        const avatar = document.createElement("div");
+        avatar.className =
+          "mt-1 h-7 w-7 rounded-full bg-emerald-500/20 border border-emerald-400/70 flex items-center justify-center text-sm";
+        avatar.textContent = "🤖";
+        const bubble = document.createElement("div");
+        bubble.className =
+          "max-w-[80%] rounded-2xl bg-slate-800/80 px-3 py-2 text-slate-100 text-sm whitespace-pre-wrap";
+        bubble.textContent = text;
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        messages.appendChild(row);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      async function sendMessage(text) {
+        if (!text.trim() || isSending) return;
+        isSending = true;
+        input.value = "";
+        appendUserMessage(text);
+
+        try {
+          const res = await fetch("/api/agent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: text })
+          });
+
+          if (!res.ok) {
+            appendBotMessage(
+              "I had trouble reaching the agent service. Please try again in a moment."
+            );
+          } else {
+            const data = await res.json();
+            appendBotMessage(data.reply || "…");
+          }
+        } catch (err) {
+          console.error(err);
+          appendBotMessage(
+            "Something went wrong while contacting the agent. Please try again."
+          );
+        } finally {
+          isSending = false;
+        }
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        sendMessage(input.value);
+      });
+    })();
+  </script>
 </body>
 </html>
