@@ -1603,6 +1603,11 @@
       let isOpen = false;
       let isSending = false;
 
+      // 🔢 Límite de preguntas y memoria
+      const MAX_QUESTIONS = 10;            // máximo 10 preguntas del usuario
+      let questionCount = 0;               // cuántas ha hecho el usuario
+      const convoHistory = [];             // historial { role, content }
+
       function showToggle() {
         toggleBtn.classList.remove("hidden");
         toggleBtn.classList.add("flex");
@@ -1618,7 +1623,7 @@
         panel.classList.remove("hidden");
         panel.classList.add("animate-fade-in-up");
         isOpen = true;
-        hideToggle(); // ocultar botón cuando el panel está abierto
+        hideToggle();
         setTimeout(() => input.focus(), 150);
       }
 
@@ -1627,7 +1632,7 @@
         panel.classList.add("hidden");
         panel.classList.remove("animate-fade-in-up");
         isOpen = false;
-        showToggle(); // mostrar botón al cerrar
+        showToggle();
       }
 
       toggleBtn.addEventListener("click", () => {
@@ -1638,22 +1643,20 @@
         closeBtn.addEventListener("click", closePanel);
       }
 
-      // Cerrar con ESC
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closePanel();
       });
 
-      // Mostrar y auto-abrir después del caos inicial
+      // Mostrar y auto-abrir después del “caos”
       window.addEventListener("load", () => {
         setTimeout(() => {
           showToggle();
           setTimeout(() => {
             openPanel();
           }, 1200);
-        }, 7800); // sincronizado con tu animación de caos
+        }, 7800);
       });
 
-      // (Opcional) conectar CTA del hero si le añades id="cta-ai-agent" en el futuro
       const heroCta = document.getElementById("cta-ai-agent");
       if (heroCta) {
         heroCta.addEventListener("click", (e) => {
@@ -1662,7 +1665,7 @@
         });
       }
 
-      // Helpers UI para mensajes del widget
+      // Helpers UI
       function appendUserMessage(text) {
         const row = document.createElement("div");
         row.className = "flex justify-end";
@@ -1693,16 +1696,36 @@
       }
 
       async function sendMessage(text) {
-        if (!text.trim() || isSending) return;
+        const trimmed = text.trim();
+        if (!trimmed || isSending) return;
+
+        // 🚫 Si ya hizo 10 preguntas, no seguimos llamando a la API
+        if (questionCount >= MAX_QUESTIONS) {
+          appendBotMessage(
+            "Ya hemos llegado al límite de 10 preguntas en este chat 😊. " +
+            "Si quieres seguir la conversación, puedes contactarme por LinkedIn o desde la sección de contacto."
+          );
+          input.value = "";
+          return;
+        }
+
         isSending = true;
         input.value = "";
-        appendUserMessage(text);
+        appendUserMessage(trimmed);
+
+        // Actualizamos contador y memoria
+        questionCount += 1;
+        convoHistory.push({ role: "user", content: trimmed });
 
         try {
           const res = await fetch("/api/agent", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text })
+            body: JSON.stringify({
+              message: trimmed,
+              // 🧠 memoria: máximo 10 preguntas ≈ 20 mensajes
+              history: convoHistory.slice(-20)
+            })
           });
 
           if (!res.ok) {
@@ -1711,7 +1734,11 @@
             );
           } else {
             const data = await res.json();
-            appendBotMessage(data.reply || "…");
+            const reply =
+              data.reply ||
+              "Sorry, I couldn't generate a reply right now. Please try again.";
+            appendBotMessage(reply);
+            convoHistory.push({ role: "assistant", content: reply });
           }
         } catch (err) {
           console.error(err);
@@ -1729,5 +1756,8 @@
       });
     })();
   </script>
+
+
+
 </body>
 </html>
